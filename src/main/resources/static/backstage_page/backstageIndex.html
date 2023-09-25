@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+
+  <link rel="stylesheet" href="/js/element-ui/index.css">
+  <script src="/js/vue.min.js"></script>
+  <script src="/js/axios.min.js"></script>
+  <script src="/js/element-ui/index.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #app {
+      height: 100%;
+    }
+
+    .el-header, .el-footer {
+      background-color: #B3C0D1;
+      color: #333;
+      text-align: center;
+      line-height: 60px;
+    }
+
+    .el-aside {
+      background-color: #D3DCE6;
+      color: #333;
+      text-align: center;
+      line-height: 200px;
+    }
+
+    .el-main {
+      background-color: #E9EEF3;
+      color: #333;
+      text-align: center;
+      line-height: 160px;
+    }
+
+    .el-container {
+      height: 100%;
+    }
+
+    .el-footer {
+      height: 60px;
+      line-height: 60px;
+      text-align: center;
+    }
+
+    #iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .el-link {
+      float: right;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <el-container>
+    <el-header v-model="mainTitle">{{mainTitle}}</el-header>
+<!--    <el-link type="primary" v-on:click="logout">退出登录</el-link>-->
+    <el-container>
+      <el-aside width="200px">
+
+        <el-tree node-key="id" :default-expanded-keys="[1]" :data="menu" :props="defaultProps"
+                 @node-click="handleNodeClick"></el-tree>
+      </el-aside>
+      <el-container>
+        <el-main>
+          <!--编写一个页面框架-->
+          <iframe id="iframe" src="../../welcome.html"></iframe>
+        </el-main>
+        <el-footer>© 趣学无限责任公司.版权所有</el-footer>
+      </el-container>
+    </el-container>
+  </el-container>
+
+</div>
+
+<script>
+  let vue = new Vue({
+    el: "#app",
+    data: {
+      menu: [],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
+      recentUser: '',
+      mainTitle: ''
+    },
+    mounted() {
+      axios.get("/backStage/showBackStageMenu.do").then(function (response) {
+        console.log(response)
+        vue.menu = response.data.data
+        vue.mainTitle = '欢迎admin使用趣学WeddingHost后台管理系统'
+
+      })
+    },
+    methods: {
+      handleNodeClick(data) {
+        //子菜单，可以跳转
+        // if (data.children == null) {
+        if (data.children.length === 0) {
+          console.log(data)
+          console.log(data.url);
+          document.getElementById("iframe").src = data.url;
+        }
+      },
+/*      logout: function () {
+        location.href = "/user/logout.do"
+      }*/
+
+    }
+  })
+  let Cookie = {
+    set: function (key, value, exdays) {
+      //校验Key, key中不能有等号【=】
+      if (key.indexOf("=") !== -1) {
+        throw new Error("Cookie不支持key中使用等号【=】, key:" + key)
+      }
+      let exdate = new Date() // 获取时间
+      exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays) // 保存的天数
+      // 字符串拼接cookie
+      // eslint-disable-next-line camelcase
+      window.document.cookie = key + '=' + value + ';path=/;expires=' + exdate.toGMTString()
+    },
+
+    get: function (key) {
+      if (document.cookie.length > 0) {
+        // 这里显示的格式需要切割一下自己可输出看下
+        var arr = document.cookie.split('; ')
+        for (let i = 0; i < arr.length; i++) {
+          let arr2 = arr[i].split('=') // 再次切割
+          // 判断查找相对应的值
+          if (arr2[0] === key) {
+            var value = arr2[1];
+            for (let j = 2; j < arr2.length; j++) {
+              value += '=' + arr2[j];
+            }
+            return value;
+          }
+        }
+      }
+    },
+    remove: function (key) {
+      set(key, '', -1);
+    }
+  }
+</script>
+
+
+</body>
+</html>
