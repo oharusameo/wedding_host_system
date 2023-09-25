@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--命名空间必须是对应接口的全限定名-->
+<mapper namespace="com.quxue.wedding_host.mapper.UserMapper">
+    <cache eviction="LRU"/>
+
+    <select id="selectAll" resultType="user">
+        select aid as id,aname as username,apwd as password,aphone as phone,rid as role,create_time,status from t_admin;
+    </select>
+</mapper>

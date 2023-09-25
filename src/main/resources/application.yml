@@ -12,17 +12,13 @@ spring:
 
 mybatis-plus:
   type-aliases-package: com.quxue.wedding_host.pojo,com.quxue.wedding_host.vo
-#  global-config:
-#    #配置逻辑删除字段
-#    logic-delete-field: del_status
-#    #逻辑删除字段的删除状态
-#    logic-delete-value: 0
-#    #逻辑删除字段的正常状态
-#    logic-not-delete-value: 1
-#    #配置全局表前缀
-#    table-prefix: t_
-#    #设置主键类型，目前MySQl设置自增
-#    id-type: auto
+  global-config:
+    db-config:
+      #全局删除字段
+      logic-delete-field: status
+      logic-delete-value: 0
+      logic-not-delete-value: 1
+
 
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #standand 标准输出

@@ -17,10 +17,8 @@ import java.io.Serializable;
 public class Menu implements Serializable {
     @TableId(value = "mid", type = IdType.AUTO)
     private Integer menuId;
-    @TableField("mname")
     private String menuName;
-    @TableField("pid")
-    private String parentId;
+    private Integer parentId;
     private String url;
     private String mdesc;
 }

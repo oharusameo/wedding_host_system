@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>userList</title>
+    <link rel="stylesheet" href="/js/element-ui/index.css">
+    <script src="/js/vue.min.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <script src="/js/element-ui/index.js"></script>
+</head>
+<body>
+<div id="app">
+    <template>
+        <el-button type="primary" type="text" v-on:click="dialogFormVisible = true">新增</el-button>
+        <el-button type="danger" v-on:click="batchDelete()">批量删除</el-button>
+        <el-table
+                :data="userList"
+                style="width: 100%"
+                v-on:selection-change="handleSelectionChange">
+            <el-table-column
+                    type="selection"
+                    width="55">
+            </el-table-column>
+            <el-table-column
+                    prop="id"
+                    label="用户id"
+                    width="100">
+            </el-table-column>
+            <el-table-column
+                    prop="username"
+                    label="用户名称"
+                    width="100">
+            </el-table-column>
+            <el-table-column
+                    prop="password"
+                    label="密码"
+                    width="100">
+            </el-table-column>
+            <el-table-column
+                    prop="phone"
+                    label="手机号"
+                    width="200">
+            </el-table-column>
+            <el-table-column
+                    prop="role"
+                    label="角色"
+                    width="100">
+            </el-table-column>
+
+            <el-table-column label="状态">
+                <template slot-scope="scope">
+                    <el-switch :value="scope.row.enabled" :disabled="scope.row.enabled" @change="changeAutograph(scope.row.id)"
+                               inactive-color="#A7A7A7" active-color="#17BF6D"></el-switch>
+                </template>
+            </el-table-column>
+
+
+            <el-table-column
+                    prop="createTime"
+                    label="创建时间"
+                    width="300">
+            </el-table-column>
+
+            <el-table-column label="操作">
+                <template slot-scope="scope">
+                    <el-button
+                            size="mini"
+                            v-on:click="handleEdit(scope.$index, scope.row)">编辑
+                    </el-button>
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            v-on:click="handleDelete(scope.$index, scope.row)">删除
+                    </el-button>
+                </template>
+            </el-table-column>
+
+        </el-table>
+
+        <el-dialog title="修改用户信息" :visible.sync="dialogUpdateFormVisible">
+            <el-form :model="editUser">
+                <el-form-item label="用户名称" :label-width="formLabelWidth">
+                    <el-input v-model="editUser.username" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" :label-width="formLabelWidth">
+                    <el-input v-model="editUser.password" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="电话" :label-width="formLabelWidth">
+                    <el-input v-model="editUser.phone" autocomplete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button v-on:click="dialogUpdateFormVisible = false">取 消</el-button>
+                <el-button type="primary" v-on:click="submitEdit">确 定</el-button>
+            </div>
+        </el-dialog>
+
+
+        <el-dialog title="新增用户" :visible.sync="dialogFormVisible">
+            <el-form :model="addUserList">
+                <el-form-item label="用户名称" :label-width="formLabelWidth">
+                    <el-input v-model="addUserList.username" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" :label-width="formLabelWidth">
+                    <el-input v-model="addUserList.password" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="手机号" :label-width="formLabelWidth">
+                    <el-input v-model="addUserList.phone" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" :label-width="formLabelWidth">
+                    <el-input v-model="addUserList.role" autocomplete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button v-on:click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" v-on:click="addUser">确 定</el-button>
+            </div>
+        </el-dialog>
+
+    </template>
+</div>
+
+
+<script>
+    let vue = new Vue({
+        el: "#app",
+        data: {
+            userList: [],
+            dialogUpdateFormVisible: false,
+            dialogFormVisible:false,
+            formLabelWidth: '120px',
+            editUser: {
+                id: '',
+                username: '',
+                password: '',
+                phone: '',
+            },
+            addUserList:{
+                username: '',
+                password: '',
+                phone: '',
+                role:''
+            },
+            userStatus:[],
+            clientModel: {signAlgorithmId: this.userStatus},
+
+
+        },
+        mounted() {
+            this.displayData();
+        },
+        methods: {
+            displayData() {
+                axios.get("/backStage/user/showAllUser.do").then(function (response) {
+                    console.log(response)
+                    vue.userList = response.data.data;
+                    vue.userStatus=vue.userList;
+                })
+            },
+            addUser(){
+                axios.post("/backStage/user/addUser.do",vue.addUserList).then(function (response){
+                    console.log(response)
+                })
+                vue.addUserList.username='';
+                vue.addUserList.password='';
+                vue.addUserList.phone='';
+                vue.addUserList.role='';
+                this.displayData();
+            },
+
+            handleEdit(index, row) {
+                vue.dialogUpdateFormVisible = true
+                console.log(index, row)
+                this.editUser.id = (index, row).id;
+            },
+            submitEdit() {
+                console.log(vue.editUser)
+                axios.post("/backStage/user/editUser.do", vue.editUser).then(function (response) {
+                    if (response.data.code == 200) {
+                        vue.dialogUpdateFormVisible = false;
+                        alert("修改用户信息成功");
+                        vue.displayData();
+                        this.editUser.username = '',
+                            this.editUser.password = '',
+                            this.editUser.phone = ''
+                    } else {
+                        alert(response.data.msg)
+                    }
+                })
+            },
+            handleDelete(index, row) {
+                console.log("id=" + (index , row).id)
+                let id = (index, row).id;
+                this.$confirm('确定要删除此数据吗，删除以后不可恢复?', '温馨提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                        axios.get("/backStage/user/delUser.do?id=" + id).then(function (response) {
+                            if (response.data.code == 200) {
+                                alert("删除用户成功")
+                                vue.displayData();
+                            } else {
+                                alert(response.data.msg)
+                            }
+                        })
+                    }
+                )
+            },
+            handleSelectionChange(val){
+                this.multipleSelection = val;
+                console.log(this.multipleSelection)
+            },
+
+            batchDelete(){
+                console.log(this.multipleSelection)
+                let userIds= []
+                let i=0
+                for (const item of this.multipleSelection) {
+                    userIds[i++]=item.id
+                }
+                console.log(userIds)
+                axios.post("/backStage/user/batchDel.do",userIds).then(function (response){
+                    if (response.data.code == 200) {
+                        alert("批量删除用户成功")
+                        vue.displayData();
+                    } else {
+                        alert(response.data.msg)
+                    }
+                })
+
+
+            },
+
+
+            changeAutograph(id) {
+                this.isShowDialog = true; //弹框打开
+                this.numId = id; //后台要的参数
+            },
+            //自定义的switch方法
+            filterListByClient() {
+                //遍历list数组
+                this.list.forEach((e) => {
+
+                    //将当前行的id与data中clientModel.signAlgorithmId的值进行比较判断
+                    if (e.status == this.clientModel.signAlgorithmId) {
+                        //如果当前行id等于data中clientModel.signAlgorithmId的值，switch状态为true
+                        e["enabled"] = true
+                    } else {
+                        //如果当前行id不等于data中clientModel.signAlgorithmId的值，switch状态为false
+                        e["enabled"] = false
+                    }
+                });
+            }
+
+        }
+
+    })
+
+</script>
+</body>
+</html>
