@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--命名空间必须是对应接口的全限定名-->
+<mapper namespace="com.quxue.wedding_host.mapper.MenuMapper">
+<!--    <cache eviction="LRU"/>-->
+
+<select id="queryByRole" resultType="menu">
+    select mt.mid, mname, url, pid, mdesc
+    from t_admin at
+             join t_role_menu rmt on at.rid = rmt.rid
+             join t_menu mt on rmt.mid = mt.mid
+        ${ew.customSqlSegment}
+</select>
+</mapper>
