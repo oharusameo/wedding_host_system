@@ -5,7 +5,7 @@
 
 <!--命名空间必须是对应接口的全限定名-->
 <mapper namespace="com.quxue.wedding_host.mapper.UserMapper">
-    <cache eviction="LRU"/>
+<!--    <cache eviction="LRU"/>-->
 
     <select id="selectAll" resultType="user">
         select aid as id,aname as username,apwd as password,aphone as phone,rid as role,create_time,status from t_admin;

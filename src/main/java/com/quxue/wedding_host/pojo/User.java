@@ -32,4 +32,9 @@ public class User implements Serializable {
     private Integer status;
 
 
+    public User(String username,String phone){
+        this.username=username;
+        this.phone=phone;
+    }
+
 }

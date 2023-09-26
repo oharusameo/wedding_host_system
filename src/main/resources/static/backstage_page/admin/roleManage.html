@@ -12,12 +12,9 @@
 <div id="app">
     <template>
         <!--搜索表单-->
-        <el-form :inline="true" :model="userSearch" class="demo-form-inline">
-            <el-form-item label="用户名称">
-                <el-input v-model="userSearch.username" placeholder="用户名称"></el-input>
-            </el-form-item>
-            <el-form-item label="手机号">
-                <el-input v-model="userSearch.phone" placeholder="手机号"></el-input>
+        <el-form :inline="true" :model="roleSearch" class="demo-form-inline">
+            <el-form-item label="角色名称">
+                <el-input v-model="roleSearch.rname" placeholder="用户名称"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" v-on:click="onSearch()">查询</el-button>
@@ -28,7 +25,7 @@
         <el-button type="primary" type="text" v-on:click="dialogFormVisible = true">新增</el-button>
         <el-button type="danger" v-on:click="batchDelete()">批量删除</el-button>
         <el-table
-                :data="userList"
+                :data="roleList"
                 style="width: 100%"
                 v-on:selection-change="handleSelectionChange">
             <el-table-column
@@ -36,42 +33,25 @@
                     width="55">
             </el-table-column>
             <el-table-column
-                    prop="id"
-                    label="用户id"
+                    prop="rid"
+                    label="角色id"
                     width="100">
             </el-table-column>
             <el-table-column
-                    prop="username"
-                    label="用户名称"
+                    prop="rname"
+                    label="角色名称"
                     width="100">
             </el-table-column>
             <el-table-column
-                    prop="password"
-                    label="密码"
-                    width="100">
-            </el-table-column>
-            <el-table-column
-                    prop="phone"
-                    label="手机号"
-                    width="200">
-            </el-table-column>
-            <el-table-column
-                    prop="role"
-                    label="角色"
-                    width="100">
+                    prop="rdesc"
+                    label="角色描述"
+                    width="300">
             </el-table-column>
             <el-table-column
                     prop="status"
-                    label="状态"
-                    width="100">
+                    label="状态   "
+                    width="200">
             </el-table-column>
-
-            <el-table-column
-                    prop="createTime"
-                    label="创建时间"
-                    width="300">
-            </el-table-column>
-
             <el-table-column label="操作">
                 <template slot-scope="scope">
                     <el-button
@@ -85,19 +65,16 @@
                     </el-button>
                 </template>
             </el-table-column>
-
         </el-table>
 
-        <el-dialog title="修改用户信息" :visible.sync="dialogUpdateFormVisible">
-            <el-form :model="editUser">
-                <el-form-item label="用户名称" :label-width="formLabelWidth">
-                    <el-input v-model="editUser.username" autocomplete="off"></el-input>
+
+        <el-dialog title="修改角色信息" :visible.sync="dialogUpdateFormVisible">
+            <el-form :model="editRole">
+                <el-form-item label="角色名称" :label-width="formLabelWidth">
+                    <el-input v-model="editRole.rname" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="密码" :label-width="formLabelWidth">
-                    <el-input v-model="editUser.password" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="电话" :label-width="formLabelWidth">
-                    <el-input v-model="editUser.phone" autocomplete="off"></el-input>
+                <el-form-item label="角色描述" :label-width="formLabelWidth">
+                    <el-input v-model="editRole.rdesc" autocomplete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -108,23 +85,17 @@
 
 
         <el-dialog title="新增用户" :visible.sync="dialogFormVisible">
-            <el-form :model="addUserList">
+            <el-form :model="addRoleList">
                 <el-form-item label="用户名称" :label-width="formLabelWidth">
-                    <el-input v-model="addUserList.username" autocomplete="off"></el-input>
+                    <el-input v-model="addRoleList.rname" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="密码" :label-width="formLabelWidth">
-                    <el-input v-model="addUserList.password" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="手机号" :label-width="formLabelWidth">
-                    <el-input v-model="addUserList.phone" autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="密码" :label-width="formLabelWidth">
-                    <el-input v-model="addUserList.role" autocomplete="off"></el-input>
+                <el-form-item label="角色描述" :label-width="formLabelWidth">
+                    <el-input v-model="addRoleList.rdesc" autocomplete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button v-on:click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" v-on:click="addUser">确 定</el-button>
+                <el-button type="primary" v-on:click="addRole">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -136,29 +107,23 @@
     let vue = new Vue({
         el: "#app",
         data: {
-            userList: [],
+            roleList: [],
             dialogUpdateFormVisible: false,
             dialogFormVisible: false,
             formLabelWidth: '120px',
-            editUser: {
-                id: '',
-                username: '',
-                password: '',
-                phone: '',
-            },
-            addUserList: {
-                username: '',
-                password: '',
-                phone: '',
-                role: ''
-            },
-            userSearch: {
-                username: '',
-                phone: '',
-            },
 
-            userStatus: [],
-
+            editRole: {
+                rid: '',
+                rname: '',
+                rdesc: '',
+            },
+            addRoleList: {
+                rname: '',
+                rdesc: '',
+            },
+            roleSearch: {
+                rname: ''
+            },
 
         },
         mounted() {
@@ -166,38 +131,35 @@
         },
         methods: {
             displayData() {
-                axios.post("/backStage/user/showUser.do").then(function (response) {
+                axios.post("/backStage/role/showRole.do").then(function (response) {
                     console.log(response)
-                    vue.userList = response.data.data;
-                    vue.userStatus = vue.userList;
+                    vue.roleList = response.data.data;
+                    vue.roleStatus = vue.roleList;
                 })
             },
-            addUser() {
-                axios.post("/backStage/user/addUser.do", vue.addUserList).then(function (response) {
+
+            addRole() {
+                axios.post("/backStage/role/addRole.do", vue.addRoleList).then(function (response) {
                     console.log(response)
                 })
-
-                vue.addUserList.username = '';
-                vue.addUserList.password = '';
-                vue.addUserList.phone = '';
-                vue.addUserList.role = '';
+                vue.addRoleList.rname = '';
+                vue.addRoleList.rdesc = '';
                 vue.displayData();
             },
 
             handleEdit(index, row) {
                 vue.dialogUpdateFormVisible = true
                 console.log(index, row)
-                this.editUser.id = (index, row).id;
+                this.editRole.rid = (index, row).rid;
             },
             submitEdit() {
-                console.log(vue.editUser)
-                axios.post("/backStage/user/editUser.do", vue.editUser).then(function (response) {
+                console.log(vue.editRole)
+                    axios.post("/backStage/role/editRole.do", vue.editRole).then(function (response) {
                     if (response.data.code == 200) {
                         vue.dialogUpdateFormVisible = false;
-                        alert("修改用户信息成功");
-                        vue.editUser.username = ''
-                        vue.editUser.password = ''
-                        vue.editUser.phone = ''
+                        alert("修改角色信息成功");
+                            vue.editRole.rname = ''
+                            vue.editRole.rdesc = ''
                         vue.displayData();
                     } else {
                         alert(response.data.msg)
@@ -205,16 +167,16 @@
                 })
             },
             handleDelete(index, row) {
-                console.log("id=" + (index , row).id)
-                let id = (index, row).id;
+                console.log("rid=" + (index , row).rid)
+                let rid = (index, row).rid;
                 this.$confirm('确定要删除此数据吗，删除以后不可恢复?', '温馨提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                        axios.get("/backStage/user/delUser.do?id=" + id).then(function (response) {
+                        axios.get("/backStage/role/delRole.do?rid=" + rid).then(function (response) {
                             if (response.data.code == 200) {
-                                alert("删除用户成功")
+                                alert("删除角色成功")
                                 vue.displayData();
                             } else {
                                 alert(response.data.msg)
@@ -228,12 +190,10 @@
                 console.log(this.multipleSelection)
             },
             onSearch() {
-                axios.post("/backStage/user/showUserByCondition.do", vue.userSearch).then(function (response) {
+                axios.post("/backStage/role/showRoleByCondition.do", vue.userSearch).then(function (response) {
                     if (response.data.code == 200) {
-                        vue.userList = response.data.data;
-                        vue.userSearch.username = '';
-                        vue.userSearch.phone = '';
-
+                        vue.roleList = response.data.data;
+                        vue.roleSearch.rname = '';
                     } else {
                         alert(response.data.msg)
                     }
@@ -242,18 +202,18 @@
 
             batchDelete() {
                 console.log(this.multipleSelection)
-                let userIds = []
+                let roleIds = []
                 let i = 0
                 for (const item of this.multipleSelection) {
-                    userIds[i++] = item.id
+                    roleIds[i++] = item.id
                 }
-                console.log(userIds)
+                console.log(roleIds)
                 this.$confirm('确定要删除这些数据吗，删除以后不可恢复?', '温馨提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    axios.post("/backStage/user/batchDel.do", userIds).then(function (response) {
+                    axios.post("/backStage/user/batchDel.do", roleIds).then(function (response) {
                         if (response.data.code == 200) {
                             alert("批量删除用户成功")
                             vue.displayData();

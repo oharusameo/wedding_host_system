@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.quxue.wedding_host.mapper.MenuMapper;
 import com.quxue.wedding_host.mapper.UserMapper;
 import com.quxue.wedding_host.pojo.Menu;
+import com.quxue.wedding_host.pojo.Role;
 import com.quxue.wedding_host.pojo.User;
 import com.quxue.wedding_host.service.MenuService;
+import com.quxue.wedding_host.service.RoleService;
+import com.quxue.wedding_host.service.UserService;
 import com.quxue.wedding_host.vo.MenuVo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,11 @@ class WeddingHostApplicationTests {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private RoleService roleService;
+
     @Test
     public void testMenu() {
         List<MenuVo> menuVos = menuService.selectMenuByRole(1);
@@ -32,10 +40,18 @@ class WeddingHostApplicationTests {
 
     @Test
     public void testUser(){
-        List<User> users = userMapper.selectList(new QueryWrapper<>());
+        User user = new User("", "11");
+        List<User> users = userService.selectUserByCondition(user);
         System.out.println("users = " + users);
+
+
     }
 
+    @Test
+    public void testRole(){
+        List<Role> roles = roleService.selectRole();
+        System.out.println("roles = " + roles);
+    }
 
 
 }

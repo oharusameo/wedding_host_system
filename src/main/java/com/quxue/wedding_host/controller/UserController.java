@@ -3,11 +3,10 @@ package com.quxue.wedding_host.controller;
 import com.quxue.wedding_host.pojo.Result;
 import com.quxue.wedding_host.pojo.User;
 import com.quxue.wedding_host.service.UserService;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -30,6 +29,11 @@ public class UserController {
         return Result.success(userService.selectAllUser());
     }
 
+    @RequestMapping("/showUserByCondition.do")
+    public Result showUserByCondition(@RequestBody User user){
+        return Result.success(userService.selectUserByCondition(user));
+    }
+
     @RequestMapping("/addUser.do")
     public Result addUser(@RequestBody User user) {
         return Result.success(userService.addUser(user));
@@ -45,7 +49,7 @@ public class UserController {
     }
 
     @RequestMapping("/delUser.do")
-    public Result delUser(@Param("id") Integer id) {
+    public Result delUser(@RequestParam Integer id) {
         System.out.println("id = " + id);
         if (userService.delUserById(id) == 1) {
             return Result.success("用户删除成功");

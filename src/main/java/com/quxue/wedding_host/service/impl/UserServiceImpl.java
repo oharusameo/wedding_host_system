@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,6 +26,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> selectAllUser() {
         return userMapper.selectAll();
+    }
+
+
+    @Override
+    public List<User> selectUserByCondition(User user) {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        if (user.getUsername()!=null){
+            wrapper.like("aname",user.getUsername());
+        }
+        if (user.getPhone()!=null){
+            wrapper.like("aphone",user.getPhone());
+        }
+        return userMapper.selectList(wrapper);
     }
 
     @Transactional
