@@ -8,7 +8,7 @@
     <cache eviction="LRU"/>
 
 <select id="queryByRole" resultType="menu">
-    select mt.mid menuId, mname menuName, url, pid parentId, mdesc
+        select mt.mid menuId, mname menuName, url, pid parentId, mdesc
     from t_admin at
              join t_role_menu rmt on at.rid = rmt.rid
              join t_menu mt on rmt.mid = mt.mid

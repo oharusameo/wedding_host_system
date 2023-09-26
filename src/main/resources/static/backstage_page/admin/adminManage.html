@@ -181,7 +181,9 @@
                 vue.addUserList.password = '';
                 vue.addUserList.phone = '';
                 vue.addUserList.role = '';
-                vue.displayData();
+                this.displayData();
+                alert("用户添加成功")
+                this.dialogFormVisible = false
             },
 
             handleEdit(index, row) {

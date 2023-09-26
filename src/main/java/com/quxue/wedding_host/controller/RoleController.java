@@ -26,8 +26,8 @@ public class RoleController {
     }
 
     @RequestMapping("/delRole.do")
-    public Result delRole(@RequestParam Integer id) {
-        if (roleService.delRole(id) == 1) {
+    public Result delRole(@RequestParam Integer rid) {
+        if (roleService.delRole(rid) == 1) {
             return Result.success("删除角色成功");
         }
         return Result.error("删除角色失败");
@@ -43,10 +43,12 @@ public class RoleController {
 
     @RequestMapping("/editRole.do")
     public Result editRole(@RequestBody Role role) {
-        if (roleService.updateRole(role) == 1) {
-            return Result.success("更新角色信息成功");
-        }
-        return Result.error("更新角色信息失败");
+        System.out.println("role = " + role);
+
+        return roleService.updateRoleMenu(role);
+//        if (roleService.updateRole(role) == 1) {
+//            return Result.success("更新角色信息成功");
+//        }
     }
 
     @RequestMapping("/showRole.do")
@@ -59,6 +61,17 @@ public class RoleController {
         return Result.success(roleService.selectRoleByCondition(role));
     }
 
+    @RequestMapping("/showMenuIdByRole.do")
+    public Result showMenuIdByRole(@RequestParam Integer rid){
+        System.out.println("rid = " + rid);
+        return Result.success(roleService.selectMenuIdByRole(rid));
+    }
 
+    @RequestMapping("/editMenuInRole.do")
+    public Result editMenuInRole(@RequestBody Role role){
+        System.out.println("role = " + role.getSelectedNode());
+
+        return Result.success(role);
+    }
 
 }

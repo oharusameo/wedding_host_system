@@ -2,6 +2,7 @@ package com.quxue.wedding_host;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.quxue.wedding_host.mapper.MenuMapper;
+import com.quxue.wedding_host.mapper.RoleMapper;
 import com.quxue.wedding_host.mapper.UserMapper;
 import com.quxue.wedding_host.pojo.Menu;
 import com.quxue.wedding_host.pojo.Role;
@@ -14,6 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @SpringBootTest
@@ -31,6 +35,8 @@ class WeddingHostApplicationTests {
     private UserService userService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private RoleMapper roleMapper;
 
     @Test
     public void testMenu() {
@@ -45,12 +51,26 @@ class WeddingHostApplicationTests {
         System.out.println("users = " + users);
 
 
+
     }
 
     @Test
     public void testRole(){
-        List<Role> roles = roleService.selectRole();
-        System.out.println("roles = " + roles);
+        ArrayList<Integer> list = new ArrayList<>();
+        Collections.addAll(list, 1, 5, 6);
+
+//        Role role = new Role("低级管理员",5);
+
+//        Integer integer = roleService.updateRole(role);
+//        Integer integer1 = roleService.delRoleMenu(role.getRId());
+
+
+//        Integer integer = roleService.insertRoleMenu(5, list);
+        Integer integer = roleMapper.insertRoleMenu(5, list);
+
+
+
+        System.out.println("integer = " + integer);
     }
 
 

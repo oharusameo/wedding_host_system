@@ -77,6 +77,21 @@
                     <el-input v-model="editRole.rdesc" autocomplete="off"></el-input>
                 </el-form-item>
             </el-form>
+            <el-container>
+                <el-tree
+                        :data="roleMenu"
+                        show-checkbox
+                        default-expand-all
+                        ref="tree"
+                        node-key="id"
+                        :default-checked-keys="selectedNode"
+
+                        highlight-current
+                        :props="defaultProps">
+                </el-tree>
+
+            </el-container>
+
             <div slot="footer" class="dialog-footer">
                 <el-button v-on:click="dialogUpdateFormVisible = false">取 消</el-button>
                 <el-button type="primary" v-on:click="submitEdit">确 定</el-button>
@@ -116,6 +131,7 @@
                 rid: '',
                 rname: '',
                 rdesc: '',
+                selectedNode:[]
             },
             addRoleList: {
                 rname: '',
@@ -125,12 +141,30 @@
                 rname: ''
             },
 
+            roleMenu: [],
+            selectedNode: [],
+            defaultProps: {
+                children: 'children',
+                label: 'label'
+            }
+
         },
         mounted() {
             this.displayData();
+
+
+            axios.get("/backStage/showBackStageMenu.do").then(function (response) {
+                vue.roleMenu = []
+                vue.roleMenu = response.data.data
+                // console.log(vue.roleMenu)
+            })
         },
         methods: {
+
+
             displayData() {
+                this.editRole.selectedNode=[]
+                this.selectedNode=[]
                 axios.post("/backStage/role/showRole.do").then(function (response) {
                     console.log(response)
                     vue.roleList = response.data.data;
@@ -148,18 +182,49 @@
             },
 
             handleEdit(index, row) {
+                vue.selectedNode=[]
                 vue.dialogUpdateFormVisible = true
                 console.log(index, row)
+                this.editRole.rname=(index,row).rname;
+                this.editRole.rdesc=(index,row).rdesc;
                 this.editRole.rid = (index, row).rid;
+                this.getMenuIdByRole();
+                this.$refs.tree.setCheckedKeys(this.selectedNode, true)
+            },
+            getMenuIdByRole() {
+                axios.get("/backStage/role/showMenuIdByRole.do?rid=" + vue.editRole.rid).then(function (response) {
+                    vue.selectedNode = response.data.data;
+                    console.log(vue.selectedNode)
+                })
+            },
+            scalarArrayEquals(array1,array2) {
+                return array1.length==array2.length && array1.every(function(v,i) { return v === array2[i]});
             },
             submitEdit() {
-                console.log(vue.editRole)
-                    axios.post("/backStage/role/editRole.do", vue.editRole).then(function (response) {
+                let nodes = this.$refs.tree.getCheckedNodes()
+                let i = 0;
+                vue.editRole.selectedNode=[]
+                console.log("nodes=",nodes)
+                for (const node of nodes) {
+                    vue.editRole.selectedNode[i++] = node.id
+                }
+
+                console.log("=============")
+                console.log("vue.editRole.selectedNode=",vue.editRole.selectedNode)
+                console.log("vue.selectedNode=",vue.selectedNode)
+                let flag=this.scalarArrayEquals(vue.editRole.selectedNode,vue.selectedNode)
+                if(flag){
+                    console.log("没改")
+                }else {
+                    console.log("改了")
+                }
+
+                axios.post("/backStage/role/editRole.do", vue.editRole).then(function (response) {
                     if (response.data.code == 200) {
                         vue.dialogUpdateFormVisible = false;
                         alert("修改角色信息成功");
-                            vue.editRole.rname = ''
-                            vue.editRole.rdesc = ''
+                        vue.editRole.rname = ''
+                        vue.editRole.rdesc = ''
                         vue.displayData();
                     } else {
                         alert(response.data.msg)
@@ -190,7 +255,7 @@
                 console.log(this.multipleSelection)
             },
             onSearch() {
-                axios.post("/backStage/role/showRoleByCondition.do", vue.userSearch).then(function (response) {
+                axios.post("/backStage/role/showRoleByCondition.do", vue.roleSearch).then(function (response) {
                     if (response.data.code == 200) {
                         vue.roleList = response.data.data;
                         vue.roleSearch.rname = '';
