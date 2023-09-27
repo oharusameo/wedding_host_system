@@ -10,5 +10,6 @@ public class MenuVo {
     private Integer id;
     private String label;
     private String url;
+    private String mdesc;
     private List<MenuVo> children=new ArrayList<>();
 }

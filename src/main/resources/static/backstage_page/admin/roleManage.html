@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>userList</title>
+    <title>roleManage</title>
     <link rel="stylesheet" href="/js/element-ui/index.css">
     <script src="/js/vue.min.js"></script>
     <script src="/js/axios.min.js"></script>
@@ -131,7 +131,7 @@
                 rid: '',
                 rname: '',
                 rdesc: '',
-                selectedNode:[]
+                selectedNode: []
             },
             addRoleList: {
                 rname: '',
@@ -151,8 +151,6 @@
         },
         mounted() {
             this.displayData();
-
-
             axios.get("/backStage/showBackStageMenu.do").then(function (response) {
                 vue.roleMenu = []
                 vue.roleMenu = response.data.data
@@ -163,8 +161,8 @@
 
 
             displayData() {
-                this.editRole.selectedNode=[]
-                this.selectedNode=[]
+                this.editRole.selectedNode = []
+                this.selectedNode = []
                 axios.post("/backStage/role/showRole.do").then(function (response) {
                     console.log(response)
                     vue.roleList = response.data.data;
@@ -182,11 +180,11 @@
             },
 
             handleEdit(index, row) {
-                vue.selectedNode=[]
+                vue.selectedNode = []
                 vue.dialogUpdateFormVisible = true
                 console.log(index, row)
-                this.editRole.rname=(index,row).rname;
-                this.editRole.rdesc=(index,row).rdesc;
+                this.editRole.rname = (index, row).rname;
+                this.editRole.rdesc = (index, row).rdesc;
                 this.editRole.rid = (index, row).rid;
                 this.getMenuIdByRole();
                 this.$refs.tree.setCheckedKeys(this.selectedNode, true)
@@ -197,25 +195,27 @@
                     console.log(vue.selectedNode)
                 })
             },
-            scalarArrayEquals(array1,array2) {
-                return array1.length==array2.length && array1.every(function(v,i) { return v === array2[i]});
+            scalarArrayEquals(array1, array2) {
+                return array1.length == array2.length && array1.every(function (v, i) {
+                    return v === array2[i]
+                });
             },
             submitEdit() {
                 let nodes = this.$refs.tree.getCheckedNodes()
                 let i = 0;
-                vue.editRole.selectedNode=[]
-                console.log("nodes=",nodes)
+                vue.editRole.selectedNode = []
+                console.log("nodes=", nodes)
                 for (const node of nodes) {
                     vue.editRole.selectedNode[i++] = node.id
                 }
 
                 console.log("=============")
-                console.log("vue.editRole.selectedNode=",vue.editRole.selectedNode)
-                console.log("vue.selectedNode=",vue.selectedNode)
-                let flag=this.scalarArrayEquals(vue.editRole.selectedNode,vue.selectedNode)
-                if(flag){
+                console.log("vue.editRole.selectedNode=", vue.editRole.selectedNode)
+                console.log("vue.selectedNode=", vue.selectedNode)
+                let flag = this.scalarArrayEquals(vue.editRole.selectedNode, vue.selectedNode)
+                if (flag) {
                     console.log("没改")
-                }else {
+                } else {
                     console.log("改了")
                 }
 

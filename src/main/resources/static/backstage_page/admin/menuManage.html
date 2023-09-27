@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>menuManage</title>
+    <link rel="stylesheet" href="/js/element-ui/index.css">
+    <script src="/js/vue.min.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <script src="/js/element-ui/index.js"></script>
+</head>
+<body>
+<div id="app">
+    <template>
+        <el-table
+                :data="roleMenu"
+                stripe
+                style="width: 100%;margin-bottom: 20px;"
+                row-key="id"
+                border
+                :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
+            <el-table-column
+                    prop="id"
+                    label="菜单id"
+                    sortable
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="label"
+                    label="菜单名称"
+                    sortable
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="mdesc"
+                    label="菜单描述"
+                    sortable
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="url"
+                    label="菜单url"
+                    sortable
+                    width="400">
+            </el-table-column>
+            <el-table-column label="操作">
+                <template slot-scope="scope">
+                    <el-button
+                            size="mini"
+                            v-on:click="handleEdit(scope.$index, scope.row)">编辑
+                    </el-button>
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            v-on:click="handleDelete(scope.$index, scope.row)">删除
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+
+
+    </template>
+</div>
+
+
+<script>
+    let vue = new Vue({
+        el: "#app",
+        data: {
+            roleList: [],
+
+            formLabelWidth: '120px',
+
+            editRole: {
+                rid: '',
+                rname: '',
+                rdesc: '',
+                selectedNode: []
+            },
+            addRoleList: {
+                rname: '',
+                rdesc: '',
+            },
+
+            roleMenu: [],
+            selectedNode: [],
+            defaultProps: {
+                children: 'children',
+                label: 'label'
+            }
+
+        },
+        mounted() {
+            this.displayData();
+            axios.get("/backStage/showBackStageMenu.do").then(function (response) {
+                vue.roleMenu = []
+                vue.roleMenu = response.data.data
+                console.log(vue.roleMenu)
+            })
+        },
+        methods: {
+            displayData() {
+                this.editRole.selectedNode = []
+                this.selectedNode = []
+
+            },
+
+            handleEdit(index, row) {
+                vue.selectedNode = []
+                vue.dialogUpdateFormVisible = true
+                console.log(index, row)
+                this.editRole.rname = (index, row).rname;
+                this.editRole.rdesc = (index, row).rdesc;
+                this.editRole.rid = (index, row).rid;
+                this.getMenuIdByRole();
+                this.$refs.tree.setCheckedKeys(this.selectedNode, true)
+            },
+        }
+
+    })
+</script>
+
+</body>
+</html>

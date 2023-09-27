@@ -56,21 +56,8 @@ class WeddingHostApplicationTests {
 
     @Test
     public void testRole(){
-        ArrayList<Integer> list = new ArrayList<>();
-        Collections.addAll(list, 1, 5, 6);
-
-//        Role role = new Role("低级管理员",5);
-
-//        Integer integer = roleService.updateRole(role);
-//        Integer integer1 = roleService.delRoleMenu(role.getRId());
-
-
-//        Integer integer = roleService.insertRoleMenu(5, list);
-        Integer integer = roleMapper.insertRoleMenu(5, list);
-
-
-
-        System.out.println("integer = " + integer);
+        List<User> users = roleMapper.queryUsageBeforeDel(4);
+        System.out.println("users = " + users);
     }
 
 

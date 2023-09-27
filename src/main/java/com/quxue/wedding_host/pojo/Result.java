@@ -52,6 +52,13 @@ public class Result {
         return result;
     }
 
+    public static Result error(Integer customCode,String msg){
+        Result result = new Result();
+        result.code = customCode;
+        result.msg = msg;
+        return result;
+    }
+
     public Integer getCode() {
         return code;
     }

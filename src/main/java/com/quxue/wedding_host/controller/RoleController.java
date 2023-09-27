@@ -27,15 +27,22 @@ public class RoleController {
 
     @RequestMapping("/delRole.do")
     public Result delRole(@RequestParam Integer rid) {
-        if (roleService.delRole(rid) == 1) {
+        Integer r = roleService.delRole(rid);
+        if (r == 1) {
             return Result.success("删除角色成功");
+        } else if (r == -1) {
+            return Result.error(501, "该角色已被用户使用，不能删除");
         }
         return Result.error("删除角色失败");
     }
+
     @RequestMapping("/batchDelRole.do")
-    public Result batchDelRole(@RequestBody List<Integer> roleIds){
-        if (roleService.batchDelRole(roleIds)>0){
+    public Result batchDelRole(@RequestBody List<Integer> roleIds) {
+        Integer r = roleService.batchDelRole(roleIds);
+        if (r > 0) {
             return Result.success("批量删除角色成功");
+        } else if (r == -1) {
+            return Result.error(501, "选中的角色已被用户使用，不能删除");
         }
         return Result.error("批量删除失败");
     }
@@ -62,13 +69,13 @@ public class RoleController {
     }
 
     @RequestMapping("/showMenuIdByRole.do")
-    public Result showMenuIdByRole(@RequestParam Integer rid){
+    public Result showMenuIdByRole(@RequestParam Integer rid) {
         System.out.println("rid = " + rid);
         return Result.success(roleService.selectMenuIdByRole(rid));
     }
 
     @RequestMapping("/editMenuInRole.do")
-    public Result editMenuInRole(@RequestBody Role role){
+    public Result editMenuInRole(@RequestBody Role role) {
         System.out.println("role = " + role.getSelectedNode());
 
         return Result.success(role);

@@ -31,8 +31,12 @@ public class User implements Serializable {
     @TableField(fill = FieldFill.INSERT)
     private Integer status;
 
+    public User(String username, Integer role) {
+        this.username = username;
+        this.role = role;
+    }
 
-    public User(String username,String phone){
+    public User(String username, String phone){
         this.username=username;
         this.phone=phone;
     }

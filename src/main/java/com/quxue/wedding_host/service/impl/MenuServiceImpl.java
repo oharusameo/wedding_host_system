@@ -36,6 +36,7 @@ public class MenuServiceImpl implements MenuService {
                 MenuVo parentMenu = new MenuVo();
                 parentMenu.setId(menu.getMenuId());
                 parentMenu.setLabel(menu.getMenuName());
+                parentMenu.setMdesc(menu.getMdesc());
 
                 //循环添加子菜单
                 for (Menu subs : list) {
@@ -44,6 +45,7 @@ public class MenuServiceImpl implements MenuService {
                         subMenu.setId(subs.getMenuId());
                         subMenu.setLabel(subs.getMenuName());
                         subMenu.setUrl(subs.getUrl());
+                        subMenu.setMdesc(subs.getMdesc());
                         parentMenu.getChildren().add(subMenu);//在父菜单下添加子菜单对象
                     }
                 }

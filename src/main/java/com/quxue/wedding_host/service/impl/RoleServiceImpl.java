@@ -26,6 +26,9 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     @Override
     public Integer delRole(Integer id) {
+        if (!roleMapper.queryUsageBeforeDel(id).isEmpty()) {
+            return -1;
+        }
         return roleMapper.deleteById(id);
     }
 
@@ -62,6 +65,11 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     @Override
     public Integer batchDelRole(List<Integer> roleIds) {
+        for (Integer roleId : roleIds) {
+            if (!roleMapper.queryUsageBeforeDel(roleId).isEmpty()) {
+                return -1;
+            }
+        }
         return roleMapper.deleteBatchIds(roleIds);
     }
 

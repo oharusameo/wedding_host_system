@@ -10,4 +10,7 @@
     <select id="selectAll" resultType="user">
         select aid as id,aname as username,apwd as password,aphone as phone,rid as role,create_time,status from t_admin;
     </select>
+
+
+
 </mapper>

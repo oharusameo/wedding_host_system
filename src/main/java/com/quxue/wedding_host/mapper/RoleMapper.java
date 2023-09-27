@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.quxue.wedding_host.pojo.Role;
+import com.quxue.wedding_host.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -12,6 +13,8 @@ import java.util.Map;
 
 @Mapper
 public interface RoleMapper extends BaseMapper<Role> {
+
+    List<User> queryUsageBeforeDel(@Param("rid") Integer rid);
 
     List<Integer> selectMenuIdByRole(@Param(Constants.WRAPPER) Wrapper<Integer> wrapper);
 

@@ -14,6 +14,13 @@
 
     </select>
 
+    <select id="queryUsageBeforeDel">
+        select aname, at.rid
+        from t_role rt
+                 join t_admin at on rt.rid = at.rid
+        where rt.rid = #{rid};
+    </select>
+
     <select id="queryRid">
         select mid
         from t_role_menu ${ew.customSqlSegment}
@@ -21,7 +28,8 @@
 
     <delete id="delRoleMenu">
         delete
-        from t_role_menu where rid=#{rid}
+        from t_role_menu
+        where rid = #{rid}
     </delete>
 
     <insert id="insertRoleMenu">
@@ -32,5 +40,4 @@
     </insert>
 
 
-    
 </mapper>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>userList</title>
+    <title>adminManage</title>
     <link rel="stylesheet" href="/js/element-ui/index.css">
     <script src="/js/vue.min.js"></script>
     <script src="/js/axios.min.js"></script>
@@ -118,7 +118,7 @@
                 <el-form-item label="手机号" :label-width="formLabelWidth">
                     <el-input v-model="addUserList.phone" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="密码" :label-width="formLabelWidth">
+                <el-form-item label="角色" :label-width="formLabelWidth">
                     <el-input v-model="addUserList.role" autocomplete="off"></el-input>
                 </el-form-item>
             </el-form>
@@ -190,6 +190,9 @@
                 vue.dialogUpdateFormVisible = true
                 console.log(index, row)
                 this.editUser.id = (index, row).id;
+                this.editUser.username = (index, row).username;
+                this.editUser.password = (index, row).password;
+                this.editUser.phone = (index, row).phone;
             },
             submitEdit() {
                 console.log(vue.editUser)
