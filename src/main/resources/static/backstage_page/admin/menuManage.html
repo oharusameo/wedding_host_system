@@ -57,6 +57,28 @@
             </el-table-column>
         </el-table>
 
+        <el-dialog title="修改菜单信息" :visible.sync="dialogUpdateFormVisible">
+            <el-form :model="editMenu">
+                <el-form-item label="菜单名称" :label-width="formLabelWidth">
+                    <el-input v-model="editMenu.menuName" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="菜单描述" :label-width="formLabelWidth">
+                    <el-input v-model="editMenu.mdesc" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="菜单url" :label-width="formLabelWidth">
+                    <el-input v-model="editMenu.url" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="父菜单id" :label-width="formLabelWidth">
+                    <el-input v-model="editMenu.parentId" autocomplete="off"></el-input>
+                </el-form-item>
+
+
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button v-on:click="dialogUpdateFormVisible = false">取 消</el-button>
+                <el-button type="primary" v-on:click="submitEdit">确 定</el-button>
+            </div>
+        </el-dialog>
 
     </template>
 </div>
@@ -66,15 +88,18 @@
     let vue = new Vue({
         el: "#app",
         data: {
-            roleList: [],
+            dialogUpdateFormVisible:false,
 
+            roleList: [],
             formLabelWidth: '120px',
 
-            editRole: {
-                rid: '',
-                rname: '',
-                rdesc: '',
-                selectedNode: []
+            editMenu: {
+                menuId: '',
+                menuName: '',
+                parentId: '',
+                url:'',
+                mdesc: '',
+                children: []
             },
             addRoleList: {
                 rname: '',
@@ -91,30 +116,48 @@
         },
         mounted() {
             this.displayData();
-            axios.get("/backStage/showBackStageMenu.do").then(function (response) {
-                vue.roleMenu = []
-                vue.roleMenu = response.data.data
-                console.log(vue.roleMenu)
-            })
+
         },
         methods: {
             displayData() {
-                this.editRole.selectedNode = []
+                axios.get("/backStage/showBackStageMenu.do").then(function (response) {
+                    vue.roleMenu = []
+                    vue.roleMenu = response.data.data
+                    console.log(vue.roleMenu)
+                })
+                // this.editRole.selectedNode = []
                 this.selectedNode = []
-
             },
 
             handleEdit(index, row) {
-                vue.selectedNode = []
-                vue.dialogUpdateFormVisible = true
-                console.log(index, row)
-                this.editRole.rname = (index, row).rname;
-                this.editRole.rdesc = (index, row).rdesc;
-                this.editRole.rid = (index, row).rid;
-                this.getMenuIdByRole();
-                this.$refs.tree.setCheckedKeys(this.selectedNode, true)
+                this.editMenu.url=''
+                this.selectedNode = (index, row);
+
+                this.editMenu.menuId=this.selectedNode.id;
+                this.editMenu.menuName=this.selectedNode.label;
+                this.editMenu.mdesc=this.selectedNode.mdesc;
+                if (this.selectedNode.children.length==0){//子菜单
+                    this.editMenu.url=this.selectedNode.url;
+                    this.editMenu.parentId=this.selectedNode.parentId
+                }else {
+                    this.editMenu.parentId=0;
+                    this.editMenu.children=this.selectedNode.children;
+                }
+                this.dialogUpdateFormVisible=true;
+
             },
-        }
+            submitEdit(){
+                axios.post("/backStage/editBackStageMenu.do",vue.editMenu).then(function (response){
+                    if (response.data.code==200){
+                        this.dialogUpdateFormVisible=false;
+                        alert("修改成功")
+                    }
+                })
+            },
+            handleDelete(index,row){},
+
+        },
+
 
     })
 </script>

@@ -1,10 +1,12 @@
 package com.quxue.wedding_host.controller;
 
+import com.quxue.wedding_host.pojo.Menu;
 import com.quxue.wedding_host.pojo.Result;
 import com.quxue.wedding_host.service.MenuService;
 import com.quxue.wedding_host.util.CookieUtil;
 import com.quxue.wedding_host.vo.MenuVo;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +26,12 @@ public class BackStageMenuController {
         List<MenuVo> menuVos = menuService.selectMenuByRole(1);
         return Result.success(menuVos);
 
+    }
+
+    @RequestMapping("/editBackStageMenu.do")
+    public Result editMenu(@RequestBody Menu menu){
+        System.out.println("menu = " + menu);
+        return Result.success();
     }
 
 }

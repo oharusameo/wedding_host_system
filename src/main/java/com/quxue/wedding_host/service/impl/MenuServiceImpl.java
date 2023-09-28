@@ -46,6 +46,7 @@ public class MenuServiceImpl implements MenuService {
                         subMenu.setLabel(subs.getMenuName());
                         subMenu.setUrl(subs.getUrl());
                         subMenu.setMdesc(subs.getMdesc());
+                        subMenu.setParentId(subs.getParentId());
                         parentMenu.getChildren().add(subMenu);//在父菜单下添加子菜单对象
                     }
                 }
