@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @RequestMapping("/showUserByCondition.do")
-    public Result showUserByCondition(@RequestBody User user){
+    public Result showUserByCondition(@RequestBody User user) {
         return Result.success(userService.selectUserByCondition(user));
     }
 
@@ -58,9 +58,9 @@ public class UserController {
     }
 
     @RequestMapping("/batchDel.do")
-    public Result batchDelUser(@RequestBody List<Integer> userIds){
+    public Result batchDelUser(@RequestBody List<Integer> userIds) {
         System.out.println("userIds = " + userIds);
-        if (userService.batchDelUser(userIds)>0){
+        if (userService.batchDelUser(userIds) > 0) {
             return Result.success("批量删除成功");
         }
         return Result.error("异常");

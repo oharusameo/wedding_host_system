@@ -40,8 +40,9 @@ class WeddingHostApplicationTests {
 
     @Test
     public void testMenu() {
-        List<MenuVo> menuVos = menuService.selectMenuByRole(1);
-        System.out.println("menuVos = " + menuVos);
+        List<Integer> integers = menuMapper.queryBeforeDelMenu(3);
+        System.out.println("integers = " + integers);
+
     }
 
     @Test

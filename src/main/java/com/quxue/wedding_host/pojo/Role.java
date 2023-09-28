@@ -30,7 +30,7 @@ public class Role {
     }
 
     public Role(String rname, Integer rid) {
-        this.rname=rname;
-        this.rid=rid;
+        this.rname = rname;
+        this.rid = rid;
     }
 }

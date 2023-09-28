@@ -20,7 +20,7 @@ public interface RoleMapper extends BaseMapper<Role> {
 
     Integer delRoleMenu(@Param("rid") Integer rid);
 
-    Integer insertRoleMenu(@Param("rid") Integer rid,@Param("menuIds") List<Integer> menuIds);
+    Integer insertRoleMenu(@Param("rid") Integer rid, @Param("menuIds") List<Integer> menuIds);
 
     List<Integer> queryRid(@Param(Constants.WRAPPER) Wrapper<Integer> wrapper);
 }

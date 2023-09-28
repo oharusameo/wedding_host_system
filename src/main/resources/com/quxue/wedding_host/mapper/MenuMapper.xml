@@ -5,7 +5,7 @@
 
 <!--命名空间必须是对应接口的全限定名-->
 <mapper namespace="com.quxue.wedding_host.mapper.MenuMapper">
-    <cache eviction="LRU"/>
+<!--    <cache eviction="LRU"/>-->
 
 <select id="queryByRole" resultType="menu">
         select mt.mid menuId, mname menuName, url, pid parentId, mdesc
@@ -14,4 +14,8 @@
              join t_menu mt on rmt.mid = mt.mid
         ${ew.customSqlSegment}
 </select>
+
+
+
+    
 </mapper>

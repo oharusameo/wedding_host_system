@@ -11,6 +11,8 @@
 <body>
 <div id="app">
     <template>
+        <el-button type="primary" type="text" v-on:click="dialogFormVisible = true">新增</el-button>
+        <!--        <el-button type="danger" v-on:click="batchDelete()">批量删除</el-button>-->
         <el-table
                 :data="roleMenu"
                 stripe
@@ -80,6 +82,30 @@
             </div>
         </el-dialog>
 
+        <el-dialog title="新增菜单" :visible.sync="dialogFormVisible">
+            <el-form :model="addMenuList">
+                <el-form-item label="菜单Id" :label-width="formLabelWidth">
+                    <el-input v-model="addMenuList.menuId" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="菜单名称" :label-width="formLabelWidth">
+                    <el-input v-model="addMenuList.menuName" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="菜单描述" :label-width="formLabelWidth">
+                    <el-input v-model="addMenuList.mdesc" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="菜单url" :label-width="formLabelWidth">
+                    <el-input v-model="addMenuList.url" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="父菜单id" :label-width="formLabelWidth">
+                    <el-input v-model="addMenuList.parentId" autocomplete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button v-on:click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" v-on:click="addMenu">确 定</el-button>
+            </div>
+        </el-dialog>
+
     </template>
 </div>
 
@@ -88,8 +114,8 @@
     let vue = new Vue({
         el: "#app",
         data: {
-            dialogUpdateFormVisible:false,
-
+            dialogUpdateFormVisible: false,
+            dialogFormVisible: false,
             roleList: [],
             formLabelWidth: '120px',
 
@@ -97,13 +123,16 @@
                 menuId: '',
                 menuName: '',
                 parentId: '',
-                url:'',
+                url: '',
                 mdesc: '',
                 children: []
             },
-            addRoleList: {
-                rname: '',
-                rdesc: '',
+            addMenuList: {
+                menuId: '',
+                menuName: '',
+                parentId: '',
+                url: '',
+                mdesc: '',
             },
 
             roleMenu: [],
@@ -111,6 +140,10 @@
             defaultProps: {
                 children: 'children',
                 label: 'label'
+            },
+            delMenuList: {
+                menuId: '',
+                parentId: '',
             }
 
         },
@@ -130,31 +163,68 @@
             },
 
             handleEdit(index, row) {
-                this.editMenu.url=''
+                this.editMenu.url = ''
                 this.selectedNode = (index, row);
-
-                this.editMenu.menuId=this.selectedNode.id;
-                this.editMenu.menuName=this.selectedNode.label;
-                this.editMenu.mdesc=this.selectedNode.mdesc;
-                if (this.selectedNode.children.length==0){//子菜单
-                    this.editMenu.url=this.selectedNode.url;
-                    this.editMenu.parentId=this.selectedNode.parentId
-                }else {
-                    this.editMenu.parentId=0;
-                    this.editMenu.children=this.selectedNode.children;
+                this.editMenu.menuId = this.selectedNode.id;
+                this.editMenu.menuName = this.selectedNode.label;
+                this.editMenu.mdesc = this.selectedNode.mdesc;
+                if (this.selectedNode.children.length == 0) {//子菜单
+                    this.editMenu.url = this.selectedNode.url;
+                    this.editMenu.parentId = this.selectedNode.parentId
+                } else {
+                    this.editMenu.parentId = 0;
+                    this.editMenu.children = this.selectedNode.children;
                 }
-                this.dialogUpdateFormVisible=true;
+                this.dialogUpdateFormVisible = true;
 
             },
-            submitEdit(){
-                axios.post("/backStage/editBackStageMenu.do",vue.editMenu).then(function (response){
-                    if (response.data.code==200){
-                        this.dialogUpdateFormVisible=false;
+            submitEdit() {
+                axios.post("/backStage/editBackStageMenu.do", vue.editMenu).then(function (response) {
+                    if (response.data.code == 200) {
                         alert("修改成功")
+                        vue.displayData()
+                        vue.dialogUpdateFormVisible = false;
                     }
                 })
             },
-            handleDelete(index,row){},
+            addMenu() {
+                axios.post("/backStage/addBackStageMenu.do", vue.addMenuList).then(function (response) {
+                    if (response.data.code == 200) {
+                        alert("新增菜单成功")
+                        vue.displayData()
+                        vue.dialogFormVisible = false;
+                        vue.addMenuList.menuName = '';
+                        vue.addMenuList.menuId = '';
+                        vue.addMenuList.parentId = '';
+                        vue.addMenuList.mdesc = '';
+                        vue.addMenuList.url = '';
+                    }
+                })
+            },
+
+
+            handleDelete(index, row) {
+                console.log((index, row))
+                this.delMenuList.menuId = ((index, row).id)
+                this.delMenuList.parentId = ((index, row).parentId)
+
+                this.$confirm('确定要删除这些数据吗，删除以后不可恢复?', '温馨提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(
+                    () => {
+                        axios.post("/backStage/delBackStageMenu.do", vue.delMenuList).then(function (response) {
+                            if (response.data.code == 200) {
+                                alert("删除菜单成功")
+                                vue.displayData()
+                            } else {
+                                alert(response.data.msg)
+                            }
+                        })
+                    }
+                )
+            },
 
         },
 

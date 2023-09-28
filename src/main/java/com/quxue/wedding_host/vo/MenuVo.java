@@ -12,5 +12,5 @@ public class MenuVo {
     private String url;
     private String mdesc;
     private Integer parentId;
-    private List<MenuVo> children=new ArrayList<>();
+    private List<MenuVo> children = new ArrayList<>();
 }

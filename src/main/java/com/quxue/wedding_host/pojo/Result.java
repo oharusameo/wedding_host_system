@@ -19,40 +19,42 @@ public class Result {
      */
 
 
-    public static Result success(){
+    public static Result success() {
         Result result = new Result();
         result.code = 200;
-        result.msg="success";
+        result.msg = "success";
         return result;
     }
-    public static Result success(String msg){
+
+    public static Result success(String msg) {
         Result result = new Result();
         result.code = 200;
         result.msg = msg;
         return result;
     }
-    public static Result success(Object data){
+
+    public static Result success(Object data) {
         Result result = new Result();
         result.code = 200;
         result.data = data;
         return result;
     }
 
-    public static Result error(){
+    public static Result error() {
         Result result = new Result();
         result.code = 500;
-        result.msg="error";
+        result.msg = "error";
         return result;
     }
 
-    public static Result error(String msg){
+    public static Result error(String msg) {
         Result result = new Result();
         result.code = 500;
         result.msg = msg;
         return result;
     }
 
-    public static Result error(Integer customCode,String msg){
+    public static Result error(Integer customCode, String msg) {
         Result result = new Result();
         result.code = customCode;
         result.msg = msg;

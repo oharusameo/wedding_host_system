@@ -32,11 +32,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> selectUserByCondition(User user) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
-        if (user.getUsername()!=null){
-            wrapper.like("aname",user.getUsername());
+        if (user.getUsername() != null) {
+            wrapper.like("aname", user.getUsername());
         }
-        if (user.getPhone()!=null){
-            wrapper.like("aphone",user.getPhone());
+        if (user.getPhone() != null) {
+            wrapper.like("aphone", user.getPhone());
         }
         return userMapper.selectList(wrapper);
     }
