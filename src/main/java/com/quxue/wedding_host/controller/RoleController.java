@@ -1,5 +1,6 @@
 package com.quxue.wedding_host.controller;
 
+import com.quxue.wedding_host.constant.RoleConst;
 import com.quxue.wedding_host.pojo.Result;
 import com.quxue.wedding_host.pojo.Role;
 import com.quxue.wedding_host.service.RoleService;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/backStage/role")
-public class RoleController {
+public class RoleController implements RoleConst {
     @Resource
     private RoleService roleService;
 
@@ -30,7 +31,7 @@ public class RoleController {
         Integer r = roleService.delRole(rid);
         if (r == 1) {
             return Result.success("删除角色成功");
-        } else if (r == -1) {
+        } else if (r.equals(ROLE_OCCUPIED_BY_CHARACTER)) {
             return Result.error(501, "该角色已被用户使用，不能删除");
         }
         return Result.error("删除角色失败");

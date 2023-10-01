@@ -222,12 +222,15 @@
                 axios.post("/backStage/role/editRole.do", vue.editRole).then(function (response) {
                     if (response.data.code == 200) {
                         vue.dialogUpdateFormVisible = false;
-                        alert("修改角色信息成功");
+                        vue.$message({
+                            message: '修改角色信息成功',
+                            type: 'success'
+                        });
                         vue.editRole.rname = ''
                         vue.editRole.rdesc = ''
                         vue.displayData();
                     } else {
-                        alert(response.data.msg)
+                        vue.$message.error(response.data.msg)
                     }
                 })
             },
@@ -241,10 +244,13 @@
                 }).then(() => {
                         axios.get("/backStage/role/delRole.do?rid=" + rid).then(function (response) {
                             if (response.data.code == 200) {
-                                alert("删除角色成功")
+                                vue.$message({
+                                    message: '删除角色成功',
+                                    type: 'success'
+                                });
                                 vue.displayData();
                             } else {
-                                alert(response.data.msg)
+                                vue.$message.error(response.data.msg)
                             }
                         })
                     }
@@ -260,7 +266,7 @@
                         vue.roleList = response.data.data;
                         vue.roleSearch.rname = '';
                     } else {
-                        alert(response.data.msg)
+                        vue.$message.error(response.data.msg)
                     }
                 })
             },
@@ -280,10 +286,13 @@
                 }).then(() => {
                     axios.post("/backStage/user/batchDel.do", roleIds).then(function (response) {
                         if (response.data.code == 200) {
-                            alert("批量删除用户成功")
+                            vue.$message({
+                                message: '批量删除用户成功',
+                                type: 'success'
+                            });
                             vue.displayData();
                         } else {
-                            alert(response.data.msg)
+                            vue.$message.error(response.data.msg)
                         }
                     })
                 })

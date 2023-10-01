@@ -181,7 +181,10 @@
             submitEdit() {
                 axios.post("/backStage/editBackStageMenu.do", vue.editMenu).then(function (response) {
                     if (response.data.code == 200) {
-                        alert("修改成功")
+                        vue.$message({
+                            message: '修改成功',
+                            type: 'success'
+                        });
                         vue.displayData()
                         vue.dialogUpdateFormVisible = false;
                     }
@@ -190,7 +193,10 @@
             addMenu() {
                 axios.post("/backStage/addBackStageMenu.do", vue.addMenuList).then(function (response) {
                     if (response.data.code == 200) {
-                        alert("新增菜单成功")
+                        vue.$message({
+                            message: '新增菜单成功',
+                            type: 'success'
+                        });
                         vue.displayData()
                         vue.dialogFormVisible = false;
                         vue.addMenuList.menuName = '';
@@ -216,10 +222,13 @@
                     () => {
                         axios.post("/backStage/delBackStageMenu.do", vue.delMenuList).then(function (response) {
                             if (response.data.code == 200) {
-                                alert("删除菜单成功")
+                                vue.$message({
+                                    message: '删除菜单成功',
+                                    type: 'success'
+                                });
                                 vue.displayData()
                             } else {
-                                alert(response.data.msg)
+                                vue.$message.error(response.data.msg);
                             }
                         })
                     }

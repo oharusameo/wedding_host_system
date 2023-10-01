@@ -1,6 +1,7 @@
 package com.quxue.wedding_host.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.quxue.wedding_host.constant.RoleConst;
 import com.quxue.wedding_host.mapper.RoleMapper;
 import com.quxue.wedding_host.pojo.Result;
 import com.quxue.wedding_host.pojo.Role;
@@ -10,10 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 
 @Service
-public class RoleServiceImpl implements RoleService {
+public class RoleServiceImpl implements RoleService, RoleConst {
     @Resource
     private RoleMapper roleMapper;
 
@@ -27,7 +27,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Integer delRole(Integer id) {
         if (!roleMapper.queryUsageBeforeDel(id).isEmpty()) {
-            return -1;
+            return ROLE_OCCUPIED_BY_CHARACTER;
         }
         return roleMapper.deleteById(id);
     }
@@ -67,7 +67,7 @@ public class RoleServiceImpl implements RoleService {
     public Integer batchDelRole(List<Integer> roleIds) {
         for (Integer roleId : roleIds) {
             if (!roleMapper.queryUsageBeforeDel(roleId).isEmpty()) {
-                return -1;
+                return ROLE_OCCUPIED_BY_CHARACTER;
             }
         }
         return roleMapper.deleteBatchIds(roleIds);

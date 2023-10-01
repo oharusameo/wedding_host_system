@@ -1,6 +1,7 @@
 package com.quxue.wedding_host.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.quxue.wedding_host.constant.MenuConst;
 import com.quxue.wedding_host.mapper.MenuMapper;
 import com.quxue.wedding_host.mapper.RoleMapper;
 import com.quxue.wedding_host.pojo.Menu;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class MenuServiceImpl implements MenuService {
+public class MenuServiceImpl implements MenuService, MenuConst {
 
     @Resource
     private MenuMapper menuMapper;
@@ -30,11 +31,11 @@ public class MenuServiceImpl implements MenuService {
     public Integer delMenu(Menu menu) {
         if (menuMapper.queryBeforeDelMenu(menu.getMenuId()).isEmpty()) {//判断该菜单是否已被使用
             if (menuMapper.queryChildrenBeforeDel(menu.getMenuId()) > 0) {//判断该菜单下有没有子菜单
-                return -2;//父菜单下有子菜单
+                return MENU_HAS_CHILDREN;//父菜单下有子菜单
             }
             return menuMapper.deleteById(menu.getMenuId());
         }
-        return -1;
+        return MENU_OCCUPIED_BY_ROLE;
     }
 
     @Transactional

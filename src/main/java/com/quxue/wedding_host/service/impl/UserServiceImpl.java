@@ -11,7 +11,6 @@ import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -50,8 +49,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public Integer delUserById(Integer id) {
-
-
         return userMapper.deleteById(id);
     }
 
