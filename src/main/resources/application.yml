@@ -23,4 +23,9 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #standand 标准输出
 
+minio:
+  endpoint: http://101.34.204.193:9000 #服务器地址
+  access-key: minioadmin #账号
+  secret-key: minioadmin #密码
+  bucket-name: harusame #文件上传的桶
 

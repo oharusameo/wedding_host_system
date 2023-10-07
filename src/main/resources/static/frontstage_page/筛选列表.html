@@ -8,16 +8,19 @@
     <link rel="stylesheet" href="../css/reset.css">
     <!-- <link rel="stylesheet" href="css/font_byta7fgc0u4/iconfont.css"> -->
     <link rel="stylesheet" href="../css/list1.css">
+    <script src="/js/vue.min.js"></script>
+    <script src="/js/axios.min.js"></script>
     <title>主持人_-_筛选列表</title>
 </head>
 
 <body>
+<div id="app">
     <!-- 顶部导航布局开始 -->
     <div>
         <div class="nav_login">
             <div class="juzhong">
                 <p>趣学旅程主持人欢迎您！ 客服：13212344321</p>
-                <p class="p_login"> <a href="#"> 登录 | 注册</a></p>
+                <p class="p_login"><a href="#"> 登录 | 注册</a></p>
             </div>
         </div>
         <div class="nav_logo">
@@ -31,10 +34,10 @@
         <div class="nav_label">
             <div class="juzhong">
                 <ui>
-                    <li> <a href="#">首页</a> </li>
-                    <li> <a href="#">主持人</a> </li>
-                    <li> <a href="#">加入我们</a> </li>
-                    <li> <a href="#">关于我们</a> </li>
+                    <li><a href="#">首页</a></li>
+                    <li><a href="#">主持人</a></li>
+                    <li><a href="#">加入我们</a></li>
+                    <li><a href="#">关于我们</a></li>
                 </ui>
             </div>
         </div>
@@ -55,35 +58,40 @@
                 <div class="anchor_cont">
                     <div class='cont_top'>
                         <span class='dianli'>典礼类型：</span>
-                        <span><a href="#">不限</a></span>
-                        <span><a href="#">西式婚礼</a></span>
-                        <span><a href="#">中式婚礼</a></span>
-                        <span><a href="#">汉唐婚礼</a></span>
-                        <span><a href="#">商务主持</a></span>
-                        <span><a href="#">宴会主持</a></span>
+                        <span><a href="javascript:void(0)" v-on:click="handleWeddingTypeChange('不限')">不限</a></span>
+                        <span><a href="javascript:void(0)" v-on:click="handleWeddingTypeChange('西式婚礼')">西式婚礼</a></span>
+                        <span><a href="javascript:void(0)" v-on:click="handleWeddingTypeChange('中式婚礼')">中式婚礼</a></span>
+                        <span><a href="javascript:void(0)" v-on:click="handleWeddingTypeChange('汉唐婚礼')">汉唐婚礼</a></span>
+                        <span><a href="javascript:void(0)" v-on:click="handleWeddingTypeChange('商务主持')">商务主持</a></span>
+                        <span><a href="javascript:void(0)" v-on:click="handleWeddingTypeChange('宴会主持')">宴会主持</a></span>
                     </div>
                     <div class='cont_top'>
                         <span class='dianli jibie'>主持人级别：</span>
-                        <span><a href="#">不限</a></span>
-                        <span><a href="#">首席9000-20000</a></span>
-                        <span><a href="#">金牌6000-9000</a></span>
-                        <span><a href="#">资深3000-6000</a></span>
+                        <span><a href="javascript:void(0)" v-on:click="handleClassChange(0,0,'不限')">不限</a></span>
+                        <span ref="top"><a href="javascript:void(0)"
+                                           v-on:click="handleClassChange(10000,10000000,'首席')">首席10000-10000000</a></span>
+                        <span ref="gold"><a href="javascript:void(0)"
+                                            v-on:click="handleClassChange(1000,10000,'金牌')">金牌1000-10000</a></span>
+                        <span ref="senior"><a href="javascript:void(0)"
+                                              v-on:click="handleClassChange(100,1000,'资深')">资深100-1000</a></span>
                     </div>
                     <div class='cont_top'>
                         <span class='dianli'>排序方式：</span>
-                        <span><a href="#">不限</a></span>
-                        <span><a href="#">好评序列</a></span>
+                        <span><a href="javascript:void(0)" v-on:click="handleOrderChange(1)">不限</a></span>
+                        <span><a href="javascript:void(0)" v-on:click="handleOrderChange(2)">好评序列</a></span>
                         <!-- <span><a href="#">价格高 <i class='iconfont icon-jiantou-you'></i>低</a></span>
                         <span><a href="#">价格低 <i class='iconfont icon-jiantou-you'></i>高</a></span> -->
-                        <span><a href="#">价格高 → 低</a></span>
-                        <span><a href="#">价格低 → 高</a></span>
+                        <span><a href="javascript:void(0)" v-on:click="handleOrderChange(3)">价格高 → 低</a></span>
+                        <span><a href="javascript:void(0)" v-on:click="handleOrderChange(4)">价格低 → 高</a></span>
                     </div>
                 </div>
                 <div class="anchor_bottom">
                     <span>精准搜索：</span>
-                    <input type="text" placeholder="支持人名字（可不填）" class='sousuo'>
-                    <button class='btn_left'>搜索主持人</button>
-                    <button class='btn_right'>清空筛选条件</button>
+                    <input ref="input" type="text" placeholder="支持人名字（可不填）" class='sousuo'>
+                    <button class='btn_left'><a href="javascript:void(0)" v-on:click="onSearch">搜索主持人</a>
+                    </button>
+                    <button class='btn_right'><a href="javascript:void(0)" v-on:click="handleClear()">清空筛选条件</a>
+                    </button>
                 </div>
             </div>
             <!-- 主持人表单结束 -->
@@ -92,116 +100,24 @@
                 <div class="kunag"></div>
                 <div class='screen_info'>
                     <span>当前筛选条件：</span>
-                    <span>2023年10月1日 上午 + 西式婚礼 + 首席9000-20000 ，</span>
+                    <span>2023年10月1日 上午  {{weddingType}}  {{level}}{{low}}-{{high}} ，</span>
                     <span>共有</span>
-                    <span>10</span>
+                    <span>{{totalCount}}</span>
                     <span>位主持人可以为您服务！</span>
                 </div>
             </div>
             <!-- 筛选条件结束 -->
+
             <!-- 主持人列表开始 -->
             <div class='anchor_list'>
                 <ul class='anchor_info'>
-                    <li><a href="#">
-                            <img src="../img/pic_1.png" alt="">
-                            <div class='star'>
-                                <img src="../img/star01.png" alt="">
-                            </div>
-                            <p class='anchor_price'>
-                                <span class='anchor_price_left'>张俊</span>
-                                <span class='anchor_price_right'>主持人价格：4000元</span>
-                            </p>
-                        </a></li>
-                    <li><a href="#">
-                            <img src="../img/pic_2.png" alt="">
-                            <div class='star'>
-                                <img src="../img/star01.png" alt="">
-                            </div>
-                            <p class='anchor_price'>
-                                <span class='anchor_price_left'>张俊</span>
-                                <span class='anchor_price_right'>主持人价格：4000元</span>
-                            </p>
-                        </a></li>
-                    <li><a href="#">
-                            <img src="../img/pic_3.png" alt="">
-                            <div class='star'>
-                                <img src="../img/star01.png" alt="">
-                            </div>
-                            <p class='anchor_price'>
-                                <span class='anchor_price_left'>张俊</span>
-                                <span class='anchor_price_right'>主持人价格：4000元</span>
-                            </p>
-                        </a></li>
-                    <li><a href="#">
-                            <img src="../img/pic_4.png" alt="">
-                            <div class='star'>
-                                <img src="../img/star01.png" alt="">
-                            </div>
-                            <p class='anchor_price'>
-                                <span class='anchor_price_left'>张俊</span>
-                                <span class='anchor_price_right'>主持人价格：4000元</span>
-                            </p>
-                        </a></li>
-                    <li><a href="#">
-                            <img src="../img/pic_5.png" alt="">
-                            <div class='star'>
-                                <img src="../img/star01.png" alt="">
-                            </div>
-                            <p class='anchor_price'>
-                                <span class='anchor_price_left'>张俊</span>
-                                <span class='anchor_price_right'>主持人价格：4000元</span>
-                            </p>
-                        </a></li>
-                    <li><a href="#">
-                            <img src="../img/pic_6.png" alt="">
-                            <div class='star'>
-                                <img src="../img/star01.png" alt="">
-                            </div>
-                            <p class='anchor_price'>
-                                <span class='anchor_price_left'>张俊</span>
-                                <span class='anchor_price_right'>主持人价格：4000元</span>
-                            </p>
-                        </a></li>
-                    <li><a href="#">
-                            <img src="../img/pic_7.png" alt="">
-                            <div class='star'>
-                                <img src="../img/star01.png" alt="">
-                            </div>
-                            <p class='anchor_price'>
-                                <span class='anchor_price_left'>张俊</span>
-                                <span class='anchor_price_right'>主持人价格：4000元</span>
-                            </p>
-                        </a></li>
-                    <li><a href="#">
-                            <img src="../img/pic_8.png" alt="">
-                            <div class='star_zhe'>
-                                <img src="../img/8zhe.png" alt="">
-                            </div>
-                            <p class='anchor_price'>
-                                <span class='anchor_price_left'>张俊</span>
-                                <span class='anchor_price_right'>主持人价格：4000元</span>
-                            </p>
-                        </a></li>
-                    <li><a href="#">
-                            <img src="../img/pic_9.png" alt="">
-                            <div class='star'>
-                                <img src="../img/star01.png" alt="">
-                            </div>
-                            <p class='anchor_price'>
-                                <span class='anchor_price_left'>张俊</span>
-                                <span class='anchor_price_right'>主持人价格：4000元</span>
-                            </p>
-                        </a></li>
-                    <li><a href="#">
-                            <img src="../img/pic_10.png" alt="">
-                            <div class='star'>
-                                <img src="../img/star01.png" alt="">
-                            </div>
-                            <p class='anchor_price'>
-                                <span class='anchor_price_left'>张俊</span>
-                                <span class='anchor_price_right'>主持人价格：4000元</span>
-                            </p>
-                        </a></li>
+                    <li v-for="(item ,index) in hosts"><a :href="'主持人详情.html?hid='+item.hid">
+                        <img v-bind:src='item.image' alt="图片加载失败">
+                        <p class='anchor_price'>
+                            <span class='anchor_price_left'>{{item.hname}}</span>
+                            <span class='anchor_price_right'>主持人价格：{{item.hprice}}元</span>
+                        </p></a>
+                    <li>
                 </ul>
             </div>
             <!-- 主持人列表结束 -->
@@ -278,13 +194,88 @@
 
     </div> -->
     <!-- 右边二维码结束 -->
+
+</div>
 </body>
 <script src="../js/jquery-1.12.3.min.js"></script>
 <script>
+    let vue = new Vue({
+        el: '#app',
+        data: {
+            hosts: {},
+            low: 0,
+            high: 0,
+            sort: 1,
+            level: '不限',
+            totalCount: 0,
+            weddingType: '不限',
+        },
+        mounted() {
+            this.displayData()
+            console.log(this.$refs.top.outerText)
+            console.log(this.$refs.gold.outerText)
+            console.log(this.$refs.senior.outerText)
+        },
+        methods: {
+            displayData() {
+                axios.get("/front/host/viewHosts.do?low=" + this.low + "&high=" + this.high + "&sort=" + this.sort).then(function (response) {
+                    console.log(response)
+                    vue.hosts = response.data.data
+                    console.log("hosts=", vue.hosts)
+                    vue.calTotalHost(vue.hosts)
+                })
+
+            },
+            handleWeddingTypeChange(str) {
+                this.weddingType = str
+                this.displayData()
+            },
+            handleClassChange(low, high, level) {
+                console.log("low=" + low + " high =" + high)
+                this.low = low;
+                this.high = high;
+                this.level = level;
+                this.displayData()
+            },
+            handleOrderChange(num) {
+                console.log(num)
+                this.sort = num
+                this.displayData()
+            },
+            handleClear() {
+                this.low = 0
+                this.high = 0
+                this.sort = 1
+                this.level = '不限'
+                this.totalCount = 0
+                this.weddingType = '不限'
+                this.displayData()
+            },
+            calTotalHost(arr) {
+                this.totalCount = arr.length
+            },
+            onSearch() {
+                let input = this.$refs.input.value
+
+                axios.post("/front/host/viewHostByConditionForFront.do?hname=" + input).then(function (response) {
+                    if (response.data.code == 200) {
+                        vue.hosts = response.data.data;
+                        console.log("hosts=", vue.hosts)
+                        vue.calTotalHost(vue.hosts)
+                    } else {
+                        console.log(response.data.msg)
+                    }
+                })
+            }
+        }
+
+    });
+
     // 导航的点击事件
     $(".nav_label li").click(function () {
         $(this).siblings('li').removeClass('active');
         $(this).addClass('active');
     })
+
 </script>
 </html>

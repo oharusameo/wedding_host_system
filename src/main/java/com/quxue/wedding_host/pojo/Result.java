@@ -26,6 +26,14 @@ public class Result {
         return result;
     }
 
+    public static Result success(String msg, Object data) {
+        Result result = new Result();
+        result.code = 200;
+        result.data=data;
+        result.msg = msg;
+        return result;
+    }
+
     public static Result success(String msg) {
         Result result = new Result();
         result.code = 200;

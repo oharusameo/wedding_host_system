@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>adminManage</title>
+    <link rel="stylesheet" href="/js/element-ui/index.css">
+    <script src="/js/vue.min.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <script src="/js/element-ui/index.js"></script>
+    <style>
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 178px;
+            height: 178px;
+            line-height: 178px;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 178px;
+            height: 178px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <template>
+
+        <el-form :model="host">
+            <el-form-item label="用户名称" :label-width="formLabelWidth">
+                <el-input v-model="host.hname" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="密码" :label-width="formLabelWidth">
+                <el-input v-model="host.hpwd" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="手机号" :label-width="formLabelWidth">
+                <el-input v-model="host.hphone" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="主持价格" :label-width="formLabelWidth">
+                <el-input v-model="host.hprice" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-upload
+                    class="avatar-uploader"
+                    action="/front/host/uploadAvatar.do"
+                    :show-file-list="true"
+                    :on-success="handleAvatarSuccess"
+                    :before-upload="beforeAvatarUpload"
+                    :auto-upload=false
+                    ref="uploadAvatar">
+                <img v-if="image" :src="image" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <!--                <el-button v-on:click="dialogFormVisible = false">取 消</el-button>-->
+            <el-button type="primary" v-on:click="addHost">确 定</el-button>
+        </div>
+
+    </template>
+</div>
+
+
+<script>
+    let vue = new Vue({
+        el: "#app",
+        data: {
+            image: '',
+            host: {
+                hname: '',
+                hpwd: '',
+                hphone: '',
+                hprice: '',
+                image: ''
+            },
+            formLabelWidth: '120px'
+
+        },
+        mounted() {
+            // this.displayData();
+        },
+
+        methods: {
+            handleAvatarSuccess(res, file) {
+                this.image = URL.createObjectURL(file.raw);
+                console.log(res)
+                this.host.image = res.msg
+            },
+            beforeAvatarUpload(file) {
+                const isJPG = file.type === 'image/jpeg';
+                const isPNG = file.type === 'image/png';
+                const isLt2M = file.size / 1024 / 1024 < 2;
+
+                if (!isJPG && !isPNG) {
+                    this.$message.error('上传头像图片只能是 JPG或PNG 格式!');
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传头像图片大小不能超过 2MB!');
+                }
+                return (isJPG || isPNG) && isLt2M;
+            },
+            addHost() {
+                console.log(this.host)
+                axios.post("/front/host/register.do", vue.host).then(function (response) {
+                    console.log(response)
+                    vue.$refs.uploadAvatar.submit()
+                    if (response.data.code == 200) {
+                        vue.$message({
+                            message: '主持人注册成功',
+                            type: 'success'
+                        });
+                    } else {
+                        vue.$message.error(response.data.msg)
+                    }
+                })
+            }
+        }
+
+
+    })
+
+</script>
+</body>
+</html>

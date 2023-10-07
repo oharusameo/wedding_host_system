@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--命名空间必须是对应接口的全限定名-->
+<mapper namespace="com.quxue.wedding_host.mapper.HostMapper">
+    <select id="selectHosts" resultType="HostVo">
+        # select hid,hname,hphone,ordernumber,image from t_host;
+        select * from t_host
+        <if test="low!=high">
+            where hprice between #{low} and #{high}
+        </if>
+        <if test="sort==2">
+            order by strong desc;
+        </if>
+        <if test="sort==3">
+            order by hprice desc;
+        </if>
+        <if test="sort==4">
+            order by hprice asc;
+        </if>
+    </select>
+
+    <select id="selectList" resultType="HostVo">
+        select * from t_host
+        <if test="hname!=null">
+            where hname like concat('%',#{hname},'%')
+        </if>
+    </select>
+
+
+    <delete id="batchDelHost">
+        delete from t_host where hid in
+        <foreach collection="hostIds" item="hostId" open="(" close=")" separator=",">
+            #{hostId}
+        </foreach>
+    </delete>
+
+</mapper>

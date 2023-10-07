@@ -1,6 +1,7 @@
 package com.quxue.wedding_host;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.quxue.wedding_host.mapper.HostMapper;
 import com.quxue.wedding_host.mapper.MenuMapper;
 import com.quxue.wedding_host.mapper.RoleMapper;
 import com.quxue.wedding_host.mapper.UserMapper;
@@ -10,6 +11,7 @@ import com.quxue.wedding_host.pojo.User;
 import com.quxue.wedding_host.service.MenuService;
 import com.quxue.wedding_host.service.RoleService;
 import com.quxue.wedding_host.service.UserService;
+import com.quxue.wedding_host.vo.HostVo;
 import com.quxue.wedding_host.vo.MenuVo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,9 @@ class WeddingHostApplicationTests {
     @Autowired
     private RoleMapper roleMapper;
 
+    @Autowired
+    private HostMapper hostMapper;
+
     @Test
     public void testMenu() {
         List<Integer> integers = menuMapper.queryBeforeDelMenu(3);
@@ -61,5 +66,9 @@ class WeddingHostApplicationTests {
         System.out.println("users = " + users);
     }
 
+    @Test
+    public void testHost(){
+
+    }
 
 }

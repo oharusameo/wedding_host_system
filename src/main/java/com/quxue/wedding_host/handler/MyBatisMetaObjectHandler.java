@@ -9,6 +9,8 @@ public class MyBatisMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         this.setFieldValByName("status",1,metaObject);
+//        this.setFieldValByName("strong",50,metaObject);
+//        this.setFieldValByName("ordernumber",0,metaObject);
     }
 
     @Override
